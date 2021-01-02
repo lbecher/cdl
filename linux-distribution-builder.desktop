@@ -2,9 +2,9 @@
 Type=Application
 Exec=AppRun
 Name=Linux Distribution Builder
+Name[pt_BR]=Construtor de Distribuição Linux
 Terminal=true
 Categories=Development;
 X-AppImage-Name=Linux Distribution Builder
 X-AppImage-Version=v0.1-alpha
 X-AppImage-Arch=x86_64
-Name[pt_BR]=linux-distribution-builder.desktop
