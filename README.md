@@ -1,1 +1,1 @@
-# LDB (Linux Distribution Builder)
+# Linux Distribution Builder
