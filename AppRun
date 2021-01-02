@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]
+then
+    echo "Não há argumentos. Use -h ou --help para receber ajuda."
+elif [ ! $# -eq 1 ] 
+then
+    echo "Apenas um parâmetro é suportado."
+elif [[ "$1" = "-f" || "$1" = "--first" ]]
+then
+    python3 first-script.py
+elif [[ "$1" = "-s" || "$1" = "--second" ]]
+then
+    echo "Segundo script indisponível."
+elif [[ "$1" = "-t" || "$1" = "--third" ]]
+then
+    echo "Terceiro script indisponível."
+elif [[ "$1" = "-h" || "$1" = "--help" ]]
+then
+    echo ""
+    echo "[Linux Distribution Builder]"
+    echo ""
+    echo "comando <parâmetro>"
+    echo ""
+    echo " -f   --first     Executa o primeiro script, para configuração do sistema hospedeiro."
+    echo " -s   --second    Executa o segundo script, para compilação dos binários de construção."
+    echo " -t   --third     Executa o terceiro scrip, para compilação da distribuição a ser criada."
+    echo " -v   --version   Exibe a versão do Linux Distribution Builder."
+    echo " -h   --help      Exibe a lista de parâmetros."
+    echo ""
+elif [[ "$1" = "-v" || "$1" = "--version" ]]
+then
+    echo "Linux Distribution Builder v0.1-alpha."
+else
+    echo "Parâmetro desconhecido. Use -h ou --help para receber ajuda."
+fi
