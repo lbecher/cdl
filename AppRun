@@ -18,7 +18,7 @@ then
 elif [[ "$1" = "-h" || "$1" = "--help" ]]
 then
     echo ""
-    echo "[Linux Distribution Builder]"
+    echo "[Linux Distributions Builder]"
     echo ""
     echo "comando <parâmetro>"
     echo ""
