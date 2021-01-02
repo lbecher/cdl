@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 Exec=AppRun
-Name=Linux Distribution Builder
-Name[pt_BR]=Construtor de Distribuição Linux
+Name=Linux Distributions Builder
+Name[pt_BR]=Construtor de Distribuições Linux
 Terminal=true
 Categories=Development;
 X-AppImage-Name=Linux Distribution Builder
