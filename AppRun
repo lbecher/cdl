@@ -11,7 +11,7 @@ then
     python3 first-script.py
 elif [[ "$1" = "-s" || "$1" = "--second" ]]
 then
-    echo "Segundo script indisponível."
+    python3 second-script.py
 elif [[ "$1" = "-t" || "$1" = "--third" ]]
 then
     echo "Terceiro script indisponível."
