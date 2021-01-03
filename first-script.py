@@ -3,7 +3,6 @@ import sys
 import platform
 import getpass
 import textwrap
-import subprocess
 
 bash_profile = '''
 exec env -i HOME=$HOME TERM=$TERM PS1=\'\\u:\\w\\$ \' /bin/bash
@@ -13,12 +12,12 @@ bashrc = '''
 set +h
 umask 022
 LFS=/mnt/{}
-LC_ALL=POSIX
+LC_ALL=POSIX.UTF-8
 LFS_TGT=$(uname -m)-{}-linux-gnu
 PATH=/usr/bin
 if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
 PATH=$LFS/tools/bin:$PATH
-export LFS LC_ALL LFS_TGT PATH
+export LFS LC_ALL LFS_TGT LANG LANGUAGE PATH 
 '''
 
 kernels = [
@@ -204,12 +203,10 @@ def add_user_and_group():
 
 
 def format_partition():
-    partition = winput('Insira uma partição para hospedar sua distribuição (ex: sda5 ou sdb1): ')
-    print('')
-    ls_return = subprocess.check_output('ls /dev/', shell = True)
-    while not partition in ls_return.decode("utf-8"):
+    partition = winput('Insira uma partição onde sua distribuição será hospedada (ex: sda5 ou sdb1): ')
+    while not os.path.exists('/dev/' + partition):
         wprint('Essa partição não existe no sistema hospedeiro. Tente novamente.')
-        partition = winput('Insira uma partição para hospedar sua distribuição (ex: sda5 ou sdb1): ')
+        partition = winput('Insira uma partição onde sua distribuição será hospedada (ex: sda5 ou sdb1): ')
     os.system('mkfs -v -t ext4 /dev/' + partition)
     os.system('mkdir -pv /mnt/' + name)
     os.system('mount -v -t ext4 /dev/' + partition + ' /mnt/' + name)
@@ -270,7 +267,6 @@ def configure_environment():
     os.system('chown -v ' + name + ' /home/' + name + '/.bashrc')
     os.system('chmod -v 664 /home/' + name + '/.bash_profile')
     os.system('chmod -v 664 /home/' + name + '/.bashrc')
-    os.system('sudo -i -u ' + name + ' sh -c \'source ~/.bash_profile\'')
 
 
 os.system('clear')
