@@ -118,7 +118,7 @@ if not os.path.exists('/mnt/' + name):
 
 if not os.path.ismount('/mnt/' + name):
     wprint('A partição de hospedagem de sua distribuição não está montada.')
-    mount_choice = winput('Deseja montá-la agora? (Digite 1 para sim, ou qualquer outro caractere para não)')
+    mount_choice = winput('Deseja montá-la agora? (Digite 1 para sim, ou qualquer outro caractere para não) ')
     if mount_choice != '1':
         wprint('O script não pode prosseguir. Parando o programa...')
         sys.exit()
