@@ -60,26 +60,26 @@ def mount_partition():
 
 def compile_host_binutils():
     os.chdir('/mnt/' + name + '/sources')
-    os.system('sudo -i -u ' + name + ' sh -c \'tar -xf binutils-2.35.tar.xz\'')
-    os.system('sudo -i -u ' + name + ' sh -c \'mkdir -v /mnt/' + name + '/sources/binutils-2.35/build\'')
+    os.system('su - ' + name + ' -c \'tar -xf binutils-2.35.tar.xz\'')
+    os.system('su - ' + name + ' -c \'mkdir -v /mnt/' + name + '/sources/binutils-2.35/build\'')
     os.chdir('/mnt/' + name + '/sources/binutils-2.35/build')
-    os.system('sudo -i -u ' + name + ' sh -c \'time ../configure --prefix=$LFS/tools --with-sysroot=$LFS --target=$LFS_TGT --disable-nls --disable-werror\'')
-    os.system('sudo -i -u ' + name + ' sh -c \'time make\'')
-    os.system('sudo -i -u ' + name + ' sh -c \'time make install\'')
+    os.system('su - ' + name + ' -c \'time ../configure --prefix=$LFS/tools --with-sysroot=$LFS --target=$LFS_TGT --disable-nls --disable-werror\'')
+    os.system('su - ' + name + ' -c \'time make\'')
+    os.system('su - ' + name + ' -c \'time make install\'')
 
 
 def compile_host_gcc():
     os.chdir('/mnt/' + name + '/sources')
-    os.system('sudo -i -u ' + name + ' sh -c \'tar -xf gcc-10.2.0.tar.xz\'')
+    os.system('su - ' + name + ' -c \'tar -xf gcc-10.2.0.tar.xz\'')
     os.chdir('/mnt/' + name + '/sources/gcc-10.2.0')
-    os.system('sudo -i -u ' + name + ' sh -c \'tar -xf ../mpfr-4.1.0.tar.xz && mv -v mpfr-4.1.0 mpfr && tar -xf ../gmp-6.2.0.tar.xz && mv -v gmp-6.2.0 gmp && tar -xf ../mpc-1.1.0.tar.gz && mv -v mpc-1.1.0 mpc && sed -e \'/m64=/s/lib64/lib/\' -i.orig gcc/config/i386/t-linux64\'')
-    os.system('sudo -i -u ' + name + ' sh -c \'mkdir -v /mnt/' + name + '/sources/gcc-10.2.0/build\'')
+    os.system('su - ' + name + ' -c \'tar -xf ../mpfr-4.1.0.tar.xz && mv -v mpfr-4.1.0 mpfr && tar -xf ../gmp-6.2.0.tar.xz && mv -v gmp-6.2.0 gmp && tar -xf ../mpc-1.1.0.tar.gz && mv -v mpc-1.1.0 mpc && sed -e \'/m64=/s/lib64/lib/\' -i.orig gcc/config/i386/t-linux64\'')
+    os.system('su - ' + name + ' -c \'mkdir -v /mnt/' + name + '/sources/gcc-10.2.0/build\'')
     os.chdir('/mnt/' + name + '/sources/gcc-10.2.0/build')
-    os.system('sudo -i -u ' + name + ' sh -c \'time ../configure --target=$LFS_TGT --prefix=$LFS/tools --with-glibc-version=2.11 --with-sysroot=$LFS --with-newlib --without-headers --enable-initfini-array --disable-nls --disable-shared --disable-multilib --disable-decimal-float --disable-threads --disable-libatomic --disable-libgomp --disable-libquadmath --disable-libssp --disable-libvtv --disable-libstdcxx --enable-languages=c,c++\'')
-    os.system('sudo -i -u ' + name + ' sh -c \'time make\'')
-    os.system('sudo -i -u ' + name + ' sh -c \'time make install\'')
+    os.system('su - ' + name + ' -c \'time ../configure --target=$LFS_TGT --prefix=$LFS/tools --with-glibc-version=2.11 --with-sysroot=$LFS --with-newlib --without-headers --enable-initfini-array --disable-nls --disable-shared --disable-multilib --disable-decimal-float --disable-threads --disable-libatomic --disable-libgomp --disable-libquadmath --disable-libssp --disable-libvtv --disable-libstdcxx --enable-languages=c,c++\'')
+    os.system('su - ' + name + ' -c \'time make\'')
+    os.system('su - ' + name + ' -c \'time make install\'')
     os.chdir('/mnt/' + name + '/sources/gcc-10.2.0')
-    os.system('sudo -i -u ' + name + ' sh -c \'cat gcc/limitx.h gcc/glimits.h gcc/limity.h > `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/install-tools/include/limits.h\'')
+    os.system('su - ' + name + ' -c \'cat gcc/limitx.h gcc/glimits.h gcc/limity.h > `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/install-tools/include/limits.h\'')
 
 
 os.system('clear')
