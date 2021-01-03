@@ -39,7 +39,7 @@ def check_architecture():
 
 def check_user():
     if getpass.getuser() != name:
-        wprint('ERRO: Este script precisa ser executado pelo usuário root.')
+        wprint('ERRO: Este script precisa ser executado pelo usuário ' + name + '.')
         sys.exit()
 
 
