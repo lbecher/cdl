@@ -38,7 +38,7 @@ def check_architecture():
 
 
 def check_user():
-    if getpass.getuser() != 'root':
+    if getpass.getuser() != name:
         wprint('ERRO: Este script precisa ser executado pelo usuário root.')
         sys.exit()
 
@@ -60,26 +60,26 @@ def mount_partition():
 
 def compile_host_binutils():
     os.chdir('/mnt/' + name + '/sources')
-    os.system('su - ' + name + ' -c \'tar -xf binutils-2.35.tar.xz\'')
-    os.system('su - ' + name + ' -c \'mkdir -v /mnt/' + name + '/sources/binutils-2.35/build\'')
+    os.system('tar -xf binutils-2.35.tar.xz')
+    os.system('mkdir -v /mnt/' + name + '/sources/binutils-2.35/build')
     os.chdir('/mnt/' + name + '/sources/binutils-2.35/build')
-    os.system('su - ' + name + ' -c \'time ../configure --prefix=$LFS/tools --with-sysroot=$LFS --target=$LFS_TGT --disable-nls --disable-werror\'')
-    os.system('su - ' + name + ' -c \'time make\'')
-    os.system('su - ' + name + ' -c \'time make install\'')
+    os.system('time ../configure --prefix=$LFS/tools --with-sysroot=$LFS --target=$LFS_TGT --disable-nls --disable-werror')
+    os.system('time make')
+    os.system('time make install')
 
 
 def compile_host_gcc():
     os.chdir('/mnt/' + name + '/sources')
-    os.system('su - ' + name + ' -c \'tar -xf gcc-10.2.0.tar.xz\'')
+    os.system('tar -xf gcc-10.2.0.tar.xz')
     os.chdir('/mnt/' + name + '/sources/gcc-10.2.0')
-    os.system('su - ' + name + ' -c \'tar -xf ../mpfr-4.1.0.tar.xz && mv -v mpfr-4.1.0 mpfr && tar -xf ../gmp-6.2.0.tar.xz && mv -v gmp-6.2.0 gmp && tar -xf ../mpc-1.1.0.tar.gz && mv -v mpc-1.1.0 mpc && sed -e \'/m64=/s/lib64/lib/\' -i.orig gcc/config/i386/t-linux64\'')
-    os.system('su - ' + name + ' -c \'mkdir -v /mnt/' + name + '/sources/gcc-10.2.0/build\'')
+    os.system('tar -xf ../mpfr-4.1.0.tar.xz && mv -v mpfr-4.1.0 mpfr && tar -xf ../gmp-6.2.0.tar.xz && mv -v gmp-6.2.0 gmp && tar -xf ../mpc-1.1.0.tar.gz && mv -v mpc-1.1.0 mpc && sed -e \'/m64=/s/lib64/lib/\' -i.orig gcc/config/i386/t-linux64')
+    os.system('mkdir -v /mnt/' + name + '/sources/gcc-10.2.0/build')
     os.chdir('/mnt/' + name + '/sources/gcc-10.2.0/build')
-    os.system('su - ' + name + ' -c \'time ../configure --target=$LFS_TGT --prefix=$LFS/tools --with-glibc-version=2.11 --with-sysroot=$LFS --with-newlib --without-headers --enable-initfini-array --disable-nls --disable-shared --disable-multilib --disable-decimal-float --disable-threads --disable-libatomic --disable-libgomp --disable-libquadmath --disable-libssp --disable-libvtv --disable-libstdcxx --enable-languages=c,c++\'')
-    os.system('su - ' + name + ' -c \'time make\'')
-    os.system('su - ' + name + ' -c \'time make install\'')
+    os.system('time ../configure --target=$LFS_TGT --prefix=$LFS/tools --with-glibc-version=2.11 --with-sysroot=$LFS --with-newlib --without-headers --enable-initfini-array --disable-nls --disable-shared --disable-multilib --disable-decimal-float --disable-threads --disable-libatomic --disable-libgomp --disable-libquadmath --disable-libssp --disable-libvtv --disable-libstdcxx --enable-languages=c,c++')
+    os.system('time make')
+    os.system('time make install')
     os.chdir('/mnt/' + name + '/sources/gcc-10.2.0')
-    os.system('su - ' + name + ' -c \'cat gcc/limitx.h gcc/glimits.h gcc/limity.h > `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/install-tools/include/limits.h\'')
+    os.system('cat gcc/limitx.h gcc/glimits.h gcc/limity.h > `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/install-tools/include/limits.h')
 
 
 os.system('clear')
@@ -100,7 +100,6 @@ ask_to_continue()
 wprint('Verificando requisitos de execução...')
 check_architecture()
 check_system()
-check_user()
 wprint('Tudo certo até o momento.')
 print('')
 
@@ -110,19 +109,25 @@ while not all(validate_character(c) for c in name):
     wprint('Não use letras maiúsculas, números, espaços ou caracteres especiais. Tente novamente.')
     name = winput('Insira um nome para sua distribuição: ')
 
+print('')
+wprint('Verificando requisitos de execução...')
+check_user()
+
 if not os.path.exists('/mnt/' + name):
     wprint('Diretório /mnt/' + name + ' não encontrado. Talvez você tenha pulado o primeiro script.')
-    wprint('Não há como prosseguir. Parando o programa...')
+    wprint('Não há como prosseguir. Parando o script...')
     sys.exit()
 
 if not os.path.ismount('/mnt/' + name):
     wprint('A partição de hospedagem de sua distribuição não está montada.')
     mount_choice = winput('Deseja montá-la agora? (Digite 1 para sim, ou qualquer outro caractere para não) ')
     if mount_choice != '1':
-        wprint('O script não pode prosseguir. Parando o programa...')
+        wprint('Não há prosseguir. Parando o script...')
         sys.exit()
     print('')
     mount_partition()
+
+wprint('Tudo certo até o momento.')
 
 print('')
 wprint('O pacote Binutils será compilado.')
