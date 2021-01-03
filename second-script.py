@@ -52,7 +52,6 @@ def validate_character(character):
 
 def mount_partition():
     partition = winput('Insira a partição onde sua distribuição está hospedada (ex: sda5 ou sdb1): ')
-    print('')
     while not os.path.exists('/dev/' + partition):
         wprint('Essa partição não existe no sistema hospedeiro. Tente novamente.')
         partition = winput('Insira uma partição para hospedar sua distribuição (ex: sda5 ou sdb1): ')
