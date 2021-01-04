@@ -1,6 +1,7 @@
 import os
 import os.path
 import sys
+import csv
 import platform
 import getpass
 import textwrap
@@ -13,12 +14,12 @@ bashrc = '''
 set +h
 umask 022
 LFS=/mnt/{}
-LC_ALL=POSIX.UTF-8
+LC_ALL=C.UTF-8
 LFS_TGT=$(uname -m)-{}-linux-gnu
 PATH=/usr/bin
 if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
 PATH=$LFS/tools/bin:$PATH
-export LFS LC_ALL LFS_TGT LANG LANGUAGE PATH 
+export LFS LC_ALL LFS_TGT LANG LANGUAGE PATH
 '''
 
 kernels = [
@@ -171,6 +172,31 @@ def check_user():
         sys.exit()
 
 
+def check_linux_id():
+    release_info = {}
+    if os.path.exists('/etc/os-release'):
+        with open('/etc/os-release') as os_release:
+            reading = csv.reader(os_release, delimiter = "=")
+            for row in reading:
+                if row:
+                    release_info[row[0]] = row[1]
+    else:
+        wprint('ERRO: Arquivo /etc/os-release inexistente ou inacessível.')
+        sys.exit()
+    if release_info['ID'] in ['ubuntu', 'linuxmint', 'fedora']:
+        return release_info['ID']
+    else:
+        wprint('ERRO: Distribuição não suportada.')
+        sys.exit()
+
+
+def check_partition_availability():
+    if os.path.exists('/mnt/' + name):
+        if os.path.ismount('/mnt/' + name):
+            wprint('ERRO: Já há um volume montado em /mnt/' + name + '.')
+            sys.exit()
+
+
 def validate_character(character):
     if character in 'qwertyuiopasdfghjklzxcvbnm':
         return True
@@ -180,9 +206,14 @@ def validate_character(character):
 
 def prepare_ubuntu_host():
     os.system('apt update')
-    os.system('apt update')
     os.system('apt upgrade -y')
-    os.system('apt install -y sudo bash binutils bison bzip2 coreutils diffutils findutils gawk gcc grep gzip m4 make patch perl python3 sed tar texinfo xz-utils')
+    os.system('apt install -y bash binutils bison bzip2 coreutils diffutils findutils gawk gcc grep gzip m4 make patch perl python3 sed tar texinfo xz-utils')
+    os.system('ln -sf bash /bin/sh')
+
+
+def prepare_fedora_host():
+    os.system('dnf update -y')
+    os.system('dnf install -y bash binutils bison bzip2 coreutils diffutils findutils gawk gcc grep gzip m4 make patch perl python3 sed tar texinfo xz-libs')
     os.system('ln -sf bash /bin/sh')
 
 
@@ -296,6 +327,7 @@ ask_to_continue()
 wprint('Verificando requisitos de execução...')
 check_architecture()
 check_system()
+distro = check_linux_id()
 check_user()
 wprint('Tudo certo até o momento.')
 print('')
@@ -307,9 +339,17 @@ while not all(validate_character(c) for c in name):
     name = winput('Insira um nome para sua distribuição: ')
 
 print('')
+wprint('Verificando requisitos de execução...')
+check_partition_availability()
+wprint('Tudo certo até o momento.')
+
+print('')
 wprint('As dependências serão instaladas no sistema hospedeiro.')
 ask_to_continue()
-prepare_ubuntu_host() # substitua por outras distros futuramente
+if distro in ['ubuntu', 'linuxmint']:
+    prepare_ubuntu_host()
+if distro in ['fedora']:
+    prepare_fedora_host()
 
 print('')
 wprint('O usuário ' + name + ' e seu grupo, de mesmo nome, serão criados no sistema hospedeiro.')
@@ -332,6 +372,10 @@ ask_to_continue()
 download_packages()
 
 print('')
-wprint('O ambiente do usuário ' + name + ' será configurado. O Script terminará no terminal de ' + name + '.')
+wprint('O ambiente do usuário ' + name + ' será configurado.')
 ask_to_continue()
 configure_environment()
+
+print('')
+wprint('Pronto!')
+print('')
