@@ -55,7 +55,7 @@ def mount_partition():
     while not os.path.exists('/dev/' + partition):
         wprint('Essa partição não existe no sistema hospedeiro. Tente novamente.')
         partition = winput('Insira uma partição para hospedar sua distribuição (ex: sda5 ou sdb1): ')
-    os.system('mount -v -t ext4 /dev/' + partition + ' /mnt/' + name)
+    os.system('su - root -c \'mount -v -t ext4 /dev/' + partition + ' /mnt/' + name + '\'')
 
 
 def compile_host_binutils():
@@ -64,8 +64,11 @@ def compile_host_binutils():
     os.system('mkdir -v /mnt/' + name + '/sources/binutils-2.35/build')
     os.chdir('/mnt/' + name + '/sources/binutils-2.35/build')
     os.system('time ../configure --prefix=$LFS/tools --with-sysroot=$LFS --target=$LFS_TGT --disable-nls --disable-werror')
+    ask_to_continue()
     os.system('time make')
+    ask_to_continue()
     os.system('time make install')
+    ask_to_continue()
 
 
 def compile_host_gcc():
@@ -76,10 +79,14 @@ def compile_host_gcc():
     os.system('mkdir -v /mnt/' + name + '/sources/gcc-10.2.0/build')
     os.chdir('/mnt/' + name + '/sources/gcc-10.2.0/build')
     os.system('time ../configure --target=$LFS_TGT --prefix=$LFS/tools --with-glibc-version=2.11 --with-sysroot=$LFS --with-newlib --without-headers --enable-initfini-array --disable-nls --disable-shared --disable-multilib --disable-decimal-float --disable-threads --disable-libatomic --disable-libgomp --disable-libquadmath --disable-libssp --disable-libvtv --disable-libstdcxx --enable-languages=c,c++')
+    ask_to_continue()
     os.system('time make')
+    ask_to_continue()
     os.system('time make install')
+    ask_to_continue()
     os.chdir('/mnt/' + name + '/sources/gcc-10.2.0')
     os.system('cat gcc/limitx.h gcc/glimits.h gcc/limity.h > `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/install-tools/include/limits.h')
+    ask_to_continue()
 
 
 os.system('clear')
@@ -131,10 +138,10 @@ wprint('Tudo certo até o momento.')
 
 print('')
 wprint('O pacote Binutils será compilado.')
-ask_to_continue()
+print('')
 compile_host_binutils()
 
 print('')
 wprint('O pacote GCC será compilado.')
-ask_to_continue()
+print('')
 compile_host_gcc()
