@@ -50,14 +50,6 @@ def validate_character(character):
         return False
 
 
-def mount_partition():
-    partition = winput('Insira a partição onde sua distribuição está hospedada (ex: sda5 ou sdb1): ')
-    while not os.path.exists('/dev/' + partition):
-        wprint('Essa partição não existe no sistema hospedeiro. Tente novamente.')
-        partition = winput('Insira uma partição para hospedar sua distribuição (ex: sda5 ou sdb1): ')
-    os.system('su - root -c \'mount -v -t ext4 /dev/' + partition + ' /mnt/' + name + '\'')
-
-
 def compile_host_binutils():
     os.chdir('/mnt/' + name + '/sources')
     os.system('tar -xf binutils-2.35.tar.xz')
@@ -127,12 +119,9 @@ if not os.path.exists('/mnt/' + name):
 
 if not os.path.ismount('/mnt/' + name):
     wprint('A partição de hospedagem de sua distribuição não está montada.')
-    mount_choice = winput('Deseja montá-la agora? (Digite 1 para sim, ou qualquer outro caractere para não) ')
-    if mount_choice != '1':
-        wprint('Não há prosseguir. Parando o script...')
-        sys.exit()
-    print('')
-    mount_partition()
+    wprint('Execute o programa com o parâmetro -m ou --mount para montar a partição.')
+    wprint('Não há prosseguir. Parando o script...')
+    sys.exit()
 
 wprint('Tudo certo até o momento.')
 

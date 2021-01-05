@@ -25,12 +25,16 @@ then
     echo " -f   --first     Executa o primeiro script, para configuração do sistema hospedeiro."
     echo " -s   --second    Executa o segundo script, para compilação dos binários de construção."
     echo " -t   --third     Executa o terceiro scrip, para compilação da distribuição a ser criada."
+    echo " -m   --mount     Executa o script para montar a partição hopedeira."
     echo " -v   --version   Exibe a versão do Linux Distribution Builder."
     echo " -h   --help      Exibe a lista de parâmetros."
     echo ""
 elif [[ "$1" = "-v" || "$1" = "--version" ]]
 then
     echo "Linux Distribution Builder v0.1-alpha."
+elif [[ "$1" = "-m" || "$1" = "--mount" ]]
+then
+    python3 mount.py
 else
     echo "Parâmetro desconhecido. Use -h ou --help para receber ajuda."
 fi
