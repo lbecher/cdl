@@ -213,7 +213,7 @@ def prepare_ubuntu_host():
 
 def prepare_fedora_host():
     os.system('dnf update -y')
-    os.system('dnf install -y bash binutils bison bzip2 coreutils diffutils findutils gawk gcc grep gzip m4 make patch perl python3 sed tar texinfo xz-libs')
+    os.system('dnf install -y isl-devel elfutils-debuginfod-client-devel bash binutils bison bzip2 coreutils diffutils findutils gawk gcc grep gzip m4 make patch perl python3 sed tar texinfo xz-libs')
     os.system('ln -sf bash /bin/sh')
 
 

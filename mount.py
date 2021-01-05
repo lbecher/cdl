@@ -106,7 +106,7 @@ check_user()
 wprint('Tudo certo até o momento.')
 print('')
 
-name = winput('Insira um nome para sua distribuição: ')
+name = winput('Insira o nome da sua distribuição, como definido anteriormente: ')
 
 while not all(validate_character(c) for c in name):
     wprint('Não use letras maiúsculas, números, espaços ou caracteres especiais.')
